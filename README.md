@@ -1,0 +1,2 @@
+# BetterKara-Beta-
+Lorem ipsum
