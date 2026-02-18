@@ -31,7 +31,7 @@ class Rotation:
     def __init__(self, rotation = 0):
         self.degrees = math.floor(rotation / 90) * 90
     
-    def get_normal(self):
+    def get_normal(self,):
         
         if self.degrees % 360 == 0:
             return Position(0,-1)
