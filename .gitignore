@@ -1,1 +1,7 @@
 venv/
+
+__init.py__
+
+__pycache__/
+
+examples/__pycache__/
