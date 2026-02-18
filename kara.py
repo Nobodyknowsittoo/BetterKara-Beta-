@@ -11,7 +11,10 @@ class Position:
         self.y = y
     
     def __mul__(self, other):
-        pass # Weitermachen
+        return Position(self.x * other, self.y * other)
+    
+    def __add__(self, other):
+        return Position(self.x + other.x, self.y + other.y)
     
     def is_in_bound(self,min_x,max_x,min_y,max_y):  # Returns True if the character is in the given bound
         if self.x >= min_x:
@@ -22,7 +25,7 @@ class Position:
         return False
     
     def is_in_worldborder(self, world): # Uses the is_in_bound function to check if the character is in the worldboarder
-        return self.is_in_bound(0,0,world.size[0],world.size[1])
+        return self.is_in_bound(0, world.size[0]-1, 0, world.size[1]-1)
     
 class Rotation:
     
@@ -31,7 +34,7 @@ class Rotation:
     def __init__(self, rotation = 0):
         self.degrees = math.floor(rotation / 90) * 90
     
-    def get_normal(self,):
+    def get_normal(self):
         
         if self.degrees % 360 == 0:
             return Position(0,-1)
