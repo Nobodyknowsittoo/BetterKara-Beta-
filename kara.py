@@ -2,8 +2,10 @@ import math
 import pygame
 
 class Position:
+    
     x = 0
     y = 0
+
     def __init__(self, x = 0, y = 0):
         self.x = x
         self.y = y
@@ -11,7 +13,7 @@ class Position:
     def __mul__(self, other):
         pass # Weitermachen
     
-    def is_in_bound(self,min_x,max_x,min_y,max_y):
+    def is_in_bound(self,min_x,max_x,min_y,max_y):  # Returns True if the character is in the given bound
         if self.x >= min_x:
             if self.x <= max_x:
                 if self.y >= min_y:
@@ -19,36 +21,47 @@ class Position:
                         return True
         return False
     
-    def is_in_worldborder(self, world):
+    def is_in_worldborder(self, world): # Uses the is_in_bound function to check if the character is in the worldboarder
         return self.is_in_bound(0,0,world.size[0],world.size[1])
     
 class Rotation:
+    
     degrees = 0
+
     def __init__(self, rotation = 0):
         self.degrees = math.floor(rotation / 90) * 90
     
     def get_normal(self):
+        
         if self.degrees % 360 == 0:
             return Position(0,-1)
+        
         if self.degrees % 360 == 90:
             return Position(1,0)
+        
         if self.degrees % 360 == 180:
             return Position(0,1)
+        
         if self.degrees % 360 == 270:
             return Position(1,0)
 
 class Kara:
+    
     position = Position(0,0)
     rotation = Rotation(0)
+    
     def __init__(self, position = Position(0,0), rotation = Rotation(0)):
         self.position = position
         self.rotation = rotation
     
     def move(self,steps, world):
+        
         new_pos = self.position + (self.rotation.get_normal() * steps)
+        
         if not new_pos.is_in_worldborder(world):
             print("Kara ist gegen eine Wand gelaufen. (˘︹˘)")
             return
+        
         self.position = new_pos
 
 class World:
@@ -84,6 +97,7 @@ class World:
         for y in range(1,self.size[1]):
             line_poses = [[0,y*64],[self.size[0]*64,y*64]]
             pygame.draw.line(surface,pygame.Color(2, 62, 138),pygame.Vector2(line_poses[0][0],line_poses[0][1]),pygame.Vector2(line_poses[1][0],line_poses[1][1]),2)
+        
         for x in range(1,self.size[0]):
             line_poses = [[x*64,0],[x*64,self.size[1]*64]]
             pygame.draw.line(surface,pygame.Color(2, 62, 138),pygame.Vector2(line_poses[0][0],line_poses[0][1]),pygame.Vector2(line_poses[1][0],line_poses[1][1]),2)
@@ -91,6 +105,7 @@ class World:
     def draw_kara(self, surface):
         kara_real_pos = (self.kara.position.x * 64,self.kara.position.y * 64)
         new_image = World.rot_center(self.karaImage,self.kara.rotation.degrees,32,32)[0]
+        
         surface.blit(new_image,kara_real_pos)
 
     def rot_center(image, angle, x, y):
