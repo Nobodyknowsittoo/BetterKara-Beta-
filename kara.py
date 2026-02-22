@@ -83,12 +83,6 @@ class World:
     fps = 60
 
     def draw(self):
-        screen_size = (64*self.size[0], 64*self.size[1])
-        screen = pygame.display.set_mode((screen_size[0],screen_size[1]))
-        screen.fill((0,29,61))
-
-        if self.karaImage == None:
-            self.karaImage = pygame.image.load("kara.png").convert_alpha()
 
         self.draw_grid(screen)
         self.draw_kara(screen)
@@ -117,3 +111,28 @@ class World:
         new_rect = rotated_image.get_rect(center = image.get_rect(center = (x, y)).center)
 
         return rotated_image, new_rect
+    
+# MAIN PART
+
+pygame.init()
+
+screen_size = (64*World.size[0], 64*World.size[1])
+screen = pygame.display.set_mode((screen_size[0],screen_size[1]))
+screen.fill((0,29,61))
+
+pygame.display.set_caption("Better Kara 🫥")
+
+pygame.display.flip()
+
+world = World([10,10], Position(3,3), Rotation(0))
+
+running = True
+while running:
+    
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    world.draw()
+
+pygame.quit()
