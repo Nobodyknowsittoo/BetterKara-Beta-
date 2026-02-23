@@ -31,7 +31,7 @@ class Rotation:
     
     degrees = 0
 
-    def __init__(self, rotation = 0):
+    def __init__(self, rotation):
         self.degrees = math.floor(rotation / 90) * 90
     
     def get_normal(self):
@@ -50,10 +50,10 @@ class Rotation:
 
 class Kara:
     
-    position = Position(0,0)
-    rotation = Rotation(0)
+    position = Position
+    rotation = Rotation
     
-    def __init__(self, position = Position(0,0), rotation = Rotation(0)):
+    def __init__(self, position = Position, rotation = Rotation):
         self.position = position
         self.rotation = rotation
     
@@ -68,9 +68,9 @@ class Kara:
         self.position = new_pos
 
 class World:
-    content = {}
+    #content = {}
     size = [10,10]
-    kara = Kara(Position(0,0),Rotation(0))
+    kara = Kara(Position,Rotation)
 
     #Cached
     karaImage = None
@@ -83,9 +83,6 @@ class World:
     fps = 60
 
     def draw(self):
-        screen_size = (64*self.size[0], 64*self.size[1])
-        screen = pygame.display.set_mode((screen_size[0],screen_size[1]))
-        screen.fill((0,29,61))
 
         if self.karaImage == None:
             self.karaImage = pygame.image.load("kara.png").convert_alpha()
@@ -117,3 +114,26 @@ class World:
         new_rect = rotated_image.get_rect(center = image.get_rect(center = (x, y)).center)
 
         return rotated_image, new_rect
+    
+# MAIN PART
+
+pygame.init()
+
+screen_size = (64*World.size[0], 64*World.size[1])
+screen = pygame.display.set_mode((screen_size[0],screen_size[1]))
+screen.fill((0,29,61))
+
+pygame.display.set_caption("Better Kara 🫥")
+
+world = World([10,10], Position(0,0), Rotation(0))
+
+running = True
+while running:
+    
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    world.draw()
+
+pygame.quit()
