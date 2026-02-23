@@ -75,7 +75,7 @@ class World:
     #Cached
     karaImage = None
 
-    def __init__(self, world_size = [10,10], kara_pos = Position(0,0), kara_rot = Rotation(0)):
+    def __init__(self, world_size = [10,10], kara_pos = Position, kara_rot = Rotation):
         self.kara = Kara(kara_pos, kara_rot)
         self.size = world_size
     
