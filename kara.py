@@ -11,7 +11,10 @@ class Position:
         self.y = y
     
     def __mul__(self, other):
-        pass # Weitermachen
+        return Position(self.x * other, self.y * other)
+    
+    def __add__(self, other):
+        return Position(self.x + other.x, self.y + other.y)
     
     def is_in_bound(self,min_x,max_x,min_y,max_y):  # Returns True if the character is in the given bound
         if self.x >= min_x:
@@ -22,16 +25,16 @@ class Position:
         return False
     
     def is_in_worldborder(self, world): # Uses the is_in_bound function to check if the character is in the worldboarder
-        return self.is_in_bound(0,0,world.size[0],world.size[1])
+        return self.is_in_bound(0, world.size[0]-1, 0, world.size[1]-1)
     
 class Rotation:
     
     degrees = 0
 
-    def __init__(self, rotation = 0):
+    def __init__(self, rotation):
         self.degrees = math.floor(rotation / 90) * 90
     
-    def get_normal(self,):
+    def get_normal(self):
         
         if self.degrees % 360 == 0:
             return Position(0,-1)
@@ -47,10 +50,10 @@ class Rotation:
 
 class Kara:
     
-    position = Position(0,0)
-    rotation = Rotation(0)
+    position = Position
+    rotation = Rotation
     
-    def __init__(self, position = Position(0,0), rotation = Rotation(0)):
+    def __init__(self, position = Position, rotation = Rotation):
         self.position = position
         self.rotation = rotation
     
@@ -65,14 +68,14 @@ class Kara:
         self.position = new_pos
 
 class World:
-    content = {}
+    #content = {}
     size = [10,10]
-    kara = Kara(Position(0,0),Rotation(0))
+    kara = Kara(Position,Rotation)
 
     #Cached
     karaImage = None
 
-    def __init__(self, world_size = [10,10], kara_pos = Position(0,0), kara_rot = Rotation(0)):
+    def __init__(self, world_size = [10,10], kara_pos = Position, kara_rot = Rotation):
         self.kara = Kara(kara_pos, kara_rot)
         self.size = world_size
     
@@ -80,9 +83,6 @@ class World:
     fps = 60
 
     def draw(self):
-        screen_size = (64*self.size[0], 64*self.size[1])
-        screen = pygame.display.set_mode((screen_size[0],screen_size[1]))
-        screen.fill((0,29,61))
 
         if self.karaImage == None:
             self.karaImage = pygame.image.load("kara.png").convert_alpha()
@@ -114,3 +114,27 @@ class World:
         new_rect = rotated_image.get_rect(center = image.get_rect(center = (x, y)).center)
 
         return rotated_image, new_rect
+    
+# MAIN PART
+
+pygame.init()
+
+screen_size = (64*World.size[0], 64*World.size[1])
+screen = pygame.display.set_mode((screen_size[0],screen_size[1]))
+screen.fill((0,29,61))
+
+pygame.display.set_caption("Better Kara 🫥")
+
+world = World([10,10], Position(0,0), Rotation(0))
+
+running = True
+while running:
+    
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+            pygame.quit()
+
+    world.draw()
+
+    pygame.display.flip()
