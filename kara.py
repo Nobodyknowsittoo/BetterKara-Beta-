@@ -92,13 +92,15 @@ class World:
 
     def draw_grid(self, surface):
 
+        surface.fill((120, 140, 110))
+
         for y in range(1,self.size[1]):
             line_poses = [[0,y*64],[self.size[0]*64,y*64]]
-            pygame.draw.line(surface,pygame.Color(2, 62, 138),pygame.Vector2(line_poses[0][0],line_poses[0][1]),pygame.Vector2(line_poses[1][0],line_poses[1][1]),2)
+            pygame.draw.line(surface,pygame.Color(0, 0, 0),pygame.Vector2(line_poses[0][0],line_poses[0][1]),pygame.Vector2(line_poses[1][0],line_poses[1][1]),2)
         
         for x in range(1,self.size[0]):
             line_poses = [[x*64,0],[x*64,self.size[1]*64]]
-            pygame.draw.line(surface,pygame.Color(2, 62, 138),pygame.Vector2(line_poses[0][0],line_poses[0][1]),pygame.Vector2(line_poses[1][0],line_poses[1][1]),2)
+            pygame.draw.line(surface,pygame.Color(0, 0, 0),pygame.Vector2(line_poses[0][0],line_poses[0][1]),pygame.Vector2(line_poses[1][0],line_poses[1][1]),2)
 
     def draw_kara(self, surface):
         kara_real_pos = (self.kara.position.x * 64,self.kara.position.y * 64)
