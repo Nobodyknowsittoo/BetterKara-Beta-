@@ -118,7 +118,12 @@ class World:
 
 pygame.init()
 
-screen_width, screen_height = 400, 300
+tile_size = 64
+world_size = [10, 10]
+
+screen_width = world_size[0] * tile_size
+screen_height = world_size[1] * tile_size
+
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Better Kara")
 
