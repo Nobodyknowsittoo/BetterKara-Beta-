@@ -39,14 +39,20 @@ class Rotation:
             return Position(0,-1)
         
         if self.degrees % 360 == 90:
-            return Position(1,0)
+            return Position(-1,0)
         
         if self.degrees % 360 == 180:
             return Position(0,1)
         
         if self.degrees % 360 == 270:
             return Position(1,0)
-        
+    
+    def __add__(self, amount):
+        if amount % 90 != 0:
+            print("Error: '", amount, "' ist keine erlaube Drehung und kann nicht mit '+' verwendet werden. Kara kann sich nur um 90-Grad Intervalle drehen." )
+            return self
+        self.degrees = (self.degrees + amount) % 360
+        return self
 
 class Kara:
     
@@ -66,6 +72,14 @@ class Kara:
             return
         
         self.position = new_pos
+    
+    def rotate(self, by_degrees):
+        if by_degrees % 90 != 0:
+            print("Error: '", by_degrees, "' ist keine erlaubte Drehung. Kara kann sich nur um 90-Grad Intervalle drehen." )
+            return self
+        self.rotation += by_degrees
+    
+    
 
 class World:
 

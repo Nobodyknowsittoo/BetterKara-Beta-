@@ -1,8 +1,10 @@
-import kara
 import time
 import random
 
-world = kara.World([10,10],kara.Position(5,5),kara.Rotation(90))
+import kara
+from kara import Position, Rotation, World
+
+world = World([10,10],Position(3,5),Rotation(90))
 
 for i in range(10):
 
@@ -10,7 +12,8 @@ for i in range(10):
     
     bug = world.kara # setting the bug to kara
     
-    bug.move(1, world) # setting kara to a position
+    world.draw()
+    bug.position = Position(random.randrange(1,4),random.randrange(1,4))
     
     time.sleep(1) # 1 second delay
 
