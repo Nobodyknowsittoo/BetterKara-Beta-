@@ -102,7 +102,6 @@ class World:
         self.draw_kara(screen)
 
         pygame.display.flip()
-        #self.clock.tick(self.fps)
 
     def draw_grid(self, surface):
 
