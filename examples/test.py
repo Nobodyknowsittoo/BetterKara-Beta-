@@ -1,8 +1,6 @@
 import time
 import random
-
-import kara
-from kara import Position, Rotation, World
+from kara import *
 
 world = World([10,10],Position(3,5),Rotation(90))
 
