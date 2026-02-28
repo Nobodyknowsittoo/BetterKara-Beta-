@@ -1,15 +1,13 @@
 import math
 import pygame
+import sys
 
 class Position:
-    
-    x = 0
-    y = 0
 
-    def __init__(self, x = 0, y = 0):
+    def __init__(self, x, y):
         self.x = x
         self.y = y
-    
+
     def __mul__(self, other):
         return Position(self.x * other, self.y * other)
     
@@ -27,11 +25,12 @@ class Position:
     def is_in_worldborder(self, world): # Uses the is_in_bound function to check if the character is in the worldboarder
         return self.is_in_bound(0, world.size[0]-1, 0, world.size[1]-1)
     
+
 class Rotation:
     
     degrees = 0
 
-    def __init__(self, rotation = 0):
+    def __init__(self, rotation):
         self.degrees = math.floor(rotation / 90) * 90
     
     def get_normal(self):
@@ -57,10 +56,10 @@ class Rotation:
 
 class Kara:
     
-    position = Position(0,0)
-    rotation = Rotation(0)
+    position = Position
+    rotation = Rotation
     
-    def __init__(self, position = Position(0,0), rotation = Rotation(0)):
+    def __init__(self, position = Position, rotation = Rotation):
         self.position = position
         self.rotation = rotation
     
@@ -83,24 +82,18 @@ class Kara:
     
 
 class World:
-    content = {}
-    size = [10,10]
-    kara = Kara(Position(0,0),Rotation(0))
 
-    #Cached
-    karaImage = None
+    #content = {}
+    size = None
+    kara = Kara(Position, Rotation)
 
-    def __init__(self, world_size = [10,10], kara_pos = Position(0,0), kara_rot = Rotation(0)):
+    def __init__(self, world_size = size, kara_pos = Position, kara_rot = Rotation):
         self.kara = Kara(kara_pos, kara_rot)
-        self.size = world_size
-    
-    fpsClock = pygame.time.Clock()
-    fps = 60
+        self.size = world_size    
 
     def draw(self):
-        screen_size = (64*self.size[0], 64*self.size[1])
-        screen = pygame.display.set_mode((screen_size[0],screen_size[1]))
-        screen.fill((0,29,61))
+
+        self.karaImage = None
 
         if self.karaImage == None:
             self.karaImage = pygame.image.load("kara.png").convert_alpha()
@@ -109,16 +102,19 @@ class World:
         self.draw_kara(screen)
 
         pygame.display.flip()
-        self.fpsClock.tick(self.fps)
-    
-    def draw_grid(self,surface):
+        #self.clock.tick(self.fps)
+
+    def draw_grid(self, surface):
+
+        surface.fill((120, 140, 110))
+
         for y in range(1,self.size[1]):
             line_poses = [[0,y*64],[self.size[0]*64,y*64]]
-            pygame.draw.line(surface,pygame.Color(2, 62, 138),pygame.Vector2(line_poses[0][0],line_poses[0][1]),pygame.Vector2(line_poses[1][0],line_poses[1][1]),2)
+            pygame.draw.line(surface,pygame.Color(0, 0, 0),pygame.Vector2(line_poses[0][0],line_poses[0][1]),pygame.Vector2(line_poses[1][0],line_poses[1][1]),2)
         
         for x in range(1,self.size[0]):
             line_poses = [[x*64,0],[x*64,self.size[1]*64]]
-            pygame.draw.line(surface,pygame.Color(2, 62, 138),pygame.Vector2(line_poses[0][0],line_poses[0][1]),pygame.Vector2(line_poses[1][0],line_poses[1][1]),2)
+            pygame.draw.line(surface,pygame.Color(0, 0, 0),pygame.Vector2(line_poses[0][0],line_poses[0][1]),pygame.Vector2(line_poses[1][0],line_poses[1][1]),2)
 
     def draw_kara(self, surface):
         kara_real_pos = (self.kara.position.x * 64,self.kara.position.y * 64)
@@ -132,3 +128,35 @@ class World:
         new_rect = rotated_image.get_rect(center = image.get_rect(center = (x, y)).center)
 
         return rotated_image, new_rect
+
+
+# MAIN PART
+
+pygame.init()
+
+tile_size = 64
+world_size = [10, 10]
+
+screen_width = world_size[0] * tile_size
+screen_height = world_size[1] * tile_size
+
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Better Kara")
+
+world = World([10,10], Position(3, 2), Rotation(0))
+
+clock = pygame.time.Clock()
+fps = 60
+
+while True:
+    # Handle events
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+    world.draw()
+
+    pygame.display.flip()
+
+    clock.tick(fps)
