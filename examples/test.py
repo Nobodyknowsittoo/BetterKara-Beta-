@@ -6,7 +6,7 @@ from kara import Position, Rotation, World
 
 world = World([10,10],Position(3,5),Rotation(90))
 
-for i in range(10):
+for i in range(10): # <- Hier kommt man nicht hin (wegen while block)
 
     world.draw() # Draw the world
     
@@ -15,6 +15,5 @@ for i in range(10):
     world.draw()
     bug.position = Position(random.randrange(1,4),random.randrange(1,4))
     
-    time.sleep(1) # 1 second delay
 
 print(random.randrange(0,10))

@@ -1,5 +1,7 @@
 venv/
 
+better/
+
 __init.py__
 
 __pycache__/
