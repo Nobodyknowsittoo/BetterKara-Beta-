@@ -161,5 +161,3 @@ async def check_quit():
         pygame.display.flip()
 
         clock.tick(fps)
-
-asyncio.run(check_quit())
