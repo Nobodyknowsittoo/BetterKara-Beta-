@@ -1,6 +1,7 @@
 import math
 import pygame
 import sys
+import asyncio
 
 class Position:
 
@@ -147,15 +148,18 @@ world = World([10,10], Position(3, 2), Rotation(0))
 clock = pygame.time.Clock()
 fps = 60
 
-while True:
+async def check_quit():
+    while True:
     # Handle events
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
 
-    world.draw()
+        world.draw()
 
-    pygame.display.flip()
+        pygame.display.flip()
 
-    clock.tick(fps)
+        clock.tick(fps)
+
+asyncio.run(check_quit())
