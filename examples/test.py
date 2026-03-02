@@ -1,19 +1,24 @@
 import time
 import random
-
-import kara
-from kara import Position, Rotation, World
+from kara import *
 
 world = World([10,10],Position(3,5),Rotation(90))
 
-for i in range(10): # <- Hier kommt man nicht hin (wegen while block)
+async def main():
+    for i in range(10): # <- Hier kommt man nicht hin (wegen while block)
 
-    world.draw() # Draw the world
+        world.draw() # Draw the world
     
-    bug = world.kara # setting the bug to kara
+        bug = world.kara # setting the bug to kara
     
-    world.draw()
-    bug.position = Position(random.randrange(1,4),random.randrange(1,4))
+        world.draw()
+        bug.position = Position(random.randrange(1,4),random.randrange(1,4))
+        time.sleep(1)
     
 
-print(random.randrange(0,10))
+    print(random.randrange(0,10))
+
+async def executeBoth():
+    await asyncio.gather(asyncio.create_task(check_quit()), asyncio.create_task(main()))
+
+asyncio.run(main())
