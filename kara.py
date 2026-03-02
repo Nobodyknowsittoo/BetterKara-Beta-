@@ -26,7 +26,6 @@ class Position:
     def is_in_worldborder(self, world): # Uses the is_in_bound function to check if the character is in the worldboarder
         return self.is_in_bound(0, world.size[0]-1, 0, world.size[1]-1)
     
-
 class Rotation:
     
     degrees = 0
@@ -59,18 +58,21 @@ class Kara:
     
     position = Position
     rotation = Rotation
+    world = None
     
-    def __init__(self, position = Position, rotation = Rotation):
+    def __init__(self, position = Position, rotation = Rotation, world = None):
         self.position = position
         self.rotation = rotation
+        self.world = world
     
-    def move(self,steps, world):
+    def move(self,steps):
         
         new_pos = self.position + (self.rotation.get_normal() * steps)
         
-        if not new_pos.is_in_worldborder(world):
-            print("Kara ist gegen eine Wand gelaufen. (˘︹˘)")
-            return
+        if self.world:
+            if not new_pos.is_in_worldborder(self.world):
+                print("Kara ist gegen eine Wand gelaufen. (˘︹˘)")
+                return
         
         self.position = new_pos
     
@@ -80,24 +82,30 @@ class Kara:
             return self
         self.rotation += by_degrees
     
-    
-
 class World:
-
+    global screen
     #content = {}
     size = None
-    kara = Kara(Position, Rotation)
+    kara = Kara(Position, Rotation, None)
 
     def __init__(self, world_size = size, kara_pos = Position, kara_rot = Rotation):
-        self.kara = Kara(kara_pos, kara_rot)
+        self.kara = Kara(kara_pos, kara_rot,self)
         self.size = world_size    
 
+    def prepare(self):
+        global screen
+
+        screen_width = self.size[0] * appearance.tile_size
+        screen_height = self.size[1] * appearance.tile_size
+
+        screen = pygame.display.set_mode((screen_width, screen_height))
+
+        self.karaImage = pygame.image.load("kara.png").convert_alpha()
+        self.karaImage = pygame.transform.scale(self.karaImage, [appearance.tile_size, appearance.tile_size])
+
+        pygame.display.set_caption("Better Kara")
+
     def draw(self):
-
-        self.karaImage = None
-
-        if self.karaImage == None:
-            self.karaImage = pygame.image.load("kara.png").convert_alpha()
 
         self.draw_grid(screen)
         self.draw_kara(screen)
@@ -108,17 +116,19 @@ class World:
 
         surface.fill((120, 140, 110))
 
+        print("Drawing grid with size: ", self.size)
+
         for y in range(1,self.size[1]):
-            line_poses = [[0,y*64],[self.size[0]*64,y*64]]
-            pygame.draw.line(surface,pygame.Color(0, 0, 0),pygame.Vector2(line_poses[0][0],line_poses[0][1]),pygame.Vector2(line_poses[1][0],line_poses[1][1]),2)
+            line_poses = [[0,y*appearance.tile_size],[self.size[0]*appearance.tile_size,y*appearance.tile_size]]
+            pygame.draw.line(surface,pygame.Color(0, 0, 0),pygame.Vector2(line_poses[0][0],line_poses[0][1]),pygame.Vector2(line_poses[1][0],line_poses[1][1]),appearance.line_width)
         
         for x in range(1,self.size[0]):
-            line_poses = [[x*64,0],[x*64,self.size[1]*64]]
-            pygame.draw.line(surface,pygame.Color(0, 0, 0),pygame.Vector2(line_poses[0][0],line_poses[0][1]),pygame.Vector2(line_poses[1][0],line_poses[1][1]),2)
+            line_poses = [[x*appearance.tile_size,0],[x*appearance.tile_size,self.size[1]*appearance.tile_size]]
+            pygame.draw.line(surface,pygame.Color(0, 0, 0),pygame.Vector2(line_poses[0][0],line_poses[0][1]),pygame.Vector2(line_poses[1][0],line_poses[1][1]),appearance.line_width)
 
     def draw_kara(self, surface):
-        kara_real_pos = (self.kara.position.x * 64,self.kara.position.y * 64)
-        new_image = World.rot_center(self.karaImage,self.kara.rotation.degrees,32,32)[0]
+        kara_real_pos = (self.kara.position.x * appearance.tile_size,self.kara.position.y * appearance.tile_size)
+        new_image = World.rot_center(self.karaImage,self.kara.rotation.degrees,appearance.tile_size / 2,appearance.tile_size / 2)[0]
         
         surface.blit(new_image,kara_real_pos)
 
@@ -129,19 +139,22 @@ class World:
 
         return rotated_image, new_rect
 
+class Appearance:
+    tile_size = 64
+    line_width = 4
+
+    def __init__(self, tile_size = 64):
+        self.tile_size = tile_size
 
 # MAIN PART
 
 pygame.init()
 
-tile_size = 64
+appearance = Appearance(64)
+
 world_size = [10, 10]
 
-screen_width = world_size[0] * tile_size
-screen_height = world_size[1] * tile_size
-
-screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption("Better Kara")
+screen = None
 
 world = World([10,10], Position(3, 2), Rotation(0))
 

@@ -1,18 +1,21 @@
 import time
 import random
 from kara import *
+import kara
 
-world = World([10,10],Position(3,5),Rotation(90))
+kara.appearance.tile_size = 128
+kara.appearance.line_width = 4
 
 async def main():
-    for i in range(10): # <- Hier kommt man nicht hin (wegen while block)
+    world = World([3,3],Position(2,1),Rotation(90)) # Init a world of size (10x10) with Kara at (3,5) rotated by 90°
+    kara.world = world
+    world.prepare()
+    world.draw()
 
-        world.draw() # Draw the world
-    
+    for i in range(10):
         bug = world.kara # setting the bug to kara
-    
-        world.draw()
-        bug.position = Position(random.randrange(1,4),random.randrange(1,4))
+        bug.move(1)
+        world.draw() # Draw the world
         time.sleep(1)
     
 
