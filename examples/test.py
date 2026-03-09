@@ -3,11 +3,11 @@ import random
 from kara import *
 import kara
 
-kara.appearance.tile_size = 128
-kara.appearance.line_width = 4
+kara.appearance.tile_size = 64
+kara.appearance.line_width = 1
 
 async def main():
-    world = World([3,3],Position(2,1),Rotation(90)) # Init a world of size (10x10) with Kara at (3,5) rotated by 90°
+    world = World([9,9],Position(2,1),Rotation(90)) # Init a world of size (10x10) with Kara at (3,5) rotated by 90°
     kara.world = world
     world.prepare()
     world.draw()
