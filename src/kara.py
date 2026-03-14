@@ -100,7 +100,7 @@ class World:
 
         screen = pygame.display.set_mode((screen_width, screen_height))
 
-        self.karaImage = pygame.image.load("kara.png").convert_alpha()
+        self.karaImage = pygame.image.load("assets/kara.png").convert_alpha()
         self.karaImage = pygame.transform.scale(self.karaImage, [appearance.tile_size, appearance.tile_size])
 
         pygame.display.set_caption("Better Kara")

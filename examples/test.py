@@ -1,7 +1,7 @@
 import time
 import random
-from kara import *
-import kara
+from src.kara import *
+import src.kara as kara
 
 kara.appearance.tile_size = 64
 kara.appearance.line_width = 1
@@ -15,7 +15,7 @@ async def main():
     for i in range(10):
         bug = world.kara # setting the bug to kara
         bug.move(1)
-        world.draw() # Draw the world
+        world.draw()
         time.sleep(1)
     
 
