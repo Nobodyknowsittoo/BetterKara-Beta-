@@ -64,10 +64,16 @@ class Thing:
         self.position = Position
 
 class Leaf(Thing):
-    leaf_type = "sakura" #basil, apple, plum, grape
+    leaf_type = "sakura" #basil, apple, grape
 
     def __init__(self, leaf_type = "sakura"):
         self.leaf_type = leaf_type
+
+class Carpet(Thing):
+    carpet_color = "black" #white, red, green, blue
+
+    def __init__(self, carpet_color = "black"):
+        self.carpet_color = carpet_color
 
 
 class Kara:
@@ -101,6 +107,16 @@ class Kara:
         leaf.position = self.position
 
         self.world.content.append(leaf)
+
+    def put_carpet(self,type):
+        if not self.world.is_space_free(self.position):
+            print("Error: Kara kann an " + str(self.position) + " kein ",type,"-Teppich platzieren!")
+            return self
+        
+        carpet = Carpet(type)
+        carpet.position = self.position
+
+        self.world.content.append(carpet)
         
     
     def rotate(self, by_degrees):
@@ -141,6 +157,7 @@ class World:
     def draw(self):
 
         self.draw_grid(screen)
+        self.draw_carpets(screen)
         self.draw_leafs(screen)
         self.draw_kara(screen)
 
@@ -149,14 +166,24 @@ class World:
     def draw_leafs(self, surface):
         for thing in self.content:
             if isinstance(thing, Leaf):
-                if not thing.leaf_type in appearance.leaf_cache.keys():
+                if not thing.image_cache in appearance.image_cache.keys():
                     leafImage = pygame.image.load("assets/leafs/" + thing.leaf_type + ".png").convert_alpha()
                     leafImage = pygame.transform.scale(leafImage, [appearance.tile_size, appearance.tile_size])
-                    appearance.leaf_cache[thing.leaf_type] = leafImage
-                leafImage = appearance.leaf_cache[thing.leaf_type]
+                    appearance.image_cache[thing.leaf_type] = leafImage
+                leafImage = appearance.image_cache[thing.leaf_type]
                 leafPos = (thing.position.x * appearance.tile_size,thing.position.y * appearance.tile_size)
                 surface.blit(leafImage,leafPos)
 
+    def draw_carpets(self, surface):
+        for thing in self.content:
+            if isinstance(thing, Carpet):
+                if not thing.carpet_color in appearance.image_cache.keys():
+                    carpetImage = pygame.image.load("assets/carpets/" + thing.carpet_color + ".png").convert_alpha()
+                    carpetImage = pygame.transform.scale(carpetImage, [appearance.tile_size, appearance.tile_size])
+                    appearance.image_cache[thing.carpet_color] = carpetImage
+                carpetImage = appearance.image_cache[thing.carpet_color]
+                carpetPos = (thing.position.x * appearance.tile_size,thing.position.y * appearance.tile_size)
+                surface.blit(carpetImage,carpetPos)
 
     def draw_grid(self, surface):
 
@@ -187,7 +214,7 @@ class Appearance:
     tile_size = 64
     line_width = 4
 
-    leaf_cache = {
+    image_cache = {
 
     }
 

@@ -14,7 +14,7 @@ async def main():
 
     bug = world.kara # setting the bug to kara
     for i in range(5):
-        bug.put_leaf("sakura")
+        bug.put_carpet("blue")
         world.draw()
 
         time.sleep(.5)
@@ -24,7 +24,8 @@ async def main():
 
         time.sleep(.5)
 
-    
+    while True:
+        time.sleep(.1)
     print(random.randrange(0,10))
 
 async def executeBoth():
