@@ -146,14 +146,14 @@ class World:
 
         pygame.display.flip()
 
-    def draw_leafs(self, screen):
+    def draw_leafs(self, surface):
         for thing in self.content:
-            if thing is Leaf:
-                if not leaf_type in appearance.leaf_cache.keys():
-                    leafImage = pygame.image.load("assets/leafs/" + leaf_type + ".png").convert_alpha()
-                    leafImage = pygame.transform.scale(self.karaImage, [appearance.tile_size, appearance.tile_size])
-                    appearance.leaf_cache[leaf_type] = leafImage
-                leafImage = appearance.leaf_cache[leaf_type]
+            if isinstance(thing, Leaf):
+                if not thing.leaf_type in appearance.leaf_cache.keys():
+                    leafImage = pygame.image.load("assets/leafs/" + thing.leaf_type + ".png").convert_alpha()
+                    leafImage = pygame.transform.scale(leafImage, [appearance.tile_size, appearance.tile_size])
+                    appearance.leaf_cache[thing.leaf_type] = leafImage
+                leafImage = appearance.leaf_cache[thing.leaf_type]
                 leafPos = (thing.position.x * appearance.tile_size,thing.position.y * appearance.tile_size)
                 surface.blit(leafImage,leafPos)
 
