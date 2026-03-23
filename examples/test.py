@@ -14,7 +14,7 @@ async def main():
 
     bug = world.kara # setting the bug to kara
     for i in range(5):
-        bug.put_carpet("blue")
+        bug.put_leaf("sakura")
         world.draw()
 
         time.sleep(.5)

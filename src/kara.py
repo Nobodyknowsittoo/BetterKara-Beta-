@@ -166,7 +166,7 @@ class World:
     def draw_leafs(self, surface):
         for thing in self.content:
             if isinstance(thing, Leaf):
-                if not thing.image_cache in appearance.image_cache.keys():
+                if not thing.leaf_type in appearance.image_cache.keys():
                     leafImage = pygame.image.load("assets/leafs/" + thing.leaf_type + ".png").convert_alpha()
                     leafImage = pygame.transform.scale(leafImage, [appearance.tile_size, appearance.tile_size])
                     appearance.image_cache[thing.leaf_type] = leafImage
