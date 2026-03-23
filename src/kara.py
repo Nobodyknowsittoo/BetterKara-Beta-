@@ -15,6 +15,9 @@ class Position:
     def __add__(self, other):
         return Position(self.x + other.x, self.y + other.y)
     
+    def __str__(self):
+        return "(" + str(self.x) + ";" + str(self.y) + ")" 
+
     def is_in_bound(self,min_x,max_x,min_y,max_y):  # Returns True if the character is in the given bound
         if self.x >= min_x:
             if self.x <= max_x:
@@ -54,6 +57,19 @@ class Rotation:
         self.degrees = (self.degrees + amount) % 360
         return self
 
+class Thing:
+    position = Position
+
+    def __init__(self, position = Position):
+        self.position = Position
+
+class Leaf(Thing):
+    leaf_type = "sakura" #basil, apple, plum, grape
+
+    def __init__(self, leaf_type = "sakura"):
+        self.leaf_type = leaf_type
+
+
 class Kara:
     
     position = Position
@@ -76,6 +92,17 @@ class Kara:
         
         self.position = new_pos
     
+    def put_leaf(self,type):
+        if not self.world.is_space_free(self.position):
+            print("Error: Kara kann an " + str(self.position) + " kein ",type,"-Blatt platzieren!")
+            return self
+        
+        leaf = Leaf(type)
+        leaf.position = self.position
+
+        self.world.content.append(leaf)
+        
+    
     def rotate(self, by_degrees):
         if by_degrees % 90 != 0:
             print("Error: '", by_degrees, "' ist keine erlaubte Drehung. Kara kann sich nur um 90-Grad Intervalle drehen." )
@@ -84,13 +111,19 @@ class Kara:
     
 class World:
     global screen
-    #content = {}
+    content = []
     size = None
     kara = Kara(Position, Rotation, None)
 
     def __init__(self, world_size = size, kara_pos = Position, kara_rot = Rotation):
         self.kara = Kara(kara_pos, kara_rot,self)
-        self.size = world_size    
+        self.size = world_size
+
+    def is_space_free(self, position):
+        for thing in self.content:
+            if thing.position == position:
+                return False
+        return True
 
     def prepare(self):
         global screen
@@ -108,15 +141,26 @@ class World:
     def draw(self):
 
         self.draw_grid(screen)
+        self.draw_leafs(screen)
         self.draw_kara(screen)
 
         pygame.display.flip()
 
+    def draw_leafs(self, surface):
+        for thing in self.content:
+            if isinstance(thing, Leaf):
+                if not thing.leaf_type in appearance.leaf_cache.keys():
+                    leafImage = pygame.image.load("assets/leafs/" + thing.leaf_type + ".png").convert_alpha()
+                    leafImage = pygame.transform.scale(leafImage, [appearance.tile_size, appearance.tile_size])
+                    appearance.leaf_cache[thing.leaf_type] = leafImage
+                leafImage = appearance.leaf_cache[thing.leaf_type]
+                leafPos = (thing.position.x * appearance.tile_size,thing.position.y * appearance.tile_size)
+                surface.blit(leafImage,leafPos)
+
+
     def draw_grid(self, surface):
 
         surface.fill((120, 140, 110))
-
-        print("Drawing grid with size: ", self.size)
 
         for y in range(1,self.size[1]):
             line_poses = [[0,y*appearance.tile_size],[self.size[0]*appearance.tile_size,y*appearance.tile_size]]
@@ -142,6 +186,10 @@ class World:
 class Appearance:
     tile_size = 64
     line_width = 4
+
+    leaf_cache = {
+
+    }
 
     def __init__(self, tile_size = 64):
         self.tile_size = tile_size
