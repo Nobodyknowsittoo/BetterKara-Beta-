@@ -3,26 +3,25 @@ import random
 from src.kara import *
 import src.kara as kara
 
-kara.appearance.tile_size = 64
-kara.appearance.line_width = 1
+kara.appearance.tile_size = 256
+kara.appearance.line_width = 8
+kara.appearance.action_duration = 0.5
 
 async def main():
-    world = World([15,15],Position(12,1),Rotation(90)) # Init a world of size (10x10) with Kara at (3,5) rotated by 90°
+    world = World([5,3],Position(1,1),Rotation(270)) # Init a world of size (10x10) with Kara at (3,5) rotated by 90°
     kara.world = world
     world.prepare()
-    world.draw()
 
     bug = world.kara # setting the bug to kara
-    for i in range(5):
-        bug.put_leaf("sakura")
-        world.draw()
 
-        time.sleep(.5)
-        bug.move(1)
-        
-        world.draw()
+    index = 0
 
-        time.sleep(.5)
+    bug.put_carpet("fuer_carpet")
+    bug.move(1)
+    bug.put_carpet("herr_carpet")
+    bug.move(1)
+    bug.put_carpet("koehler_carpet")
+    bug.move(1)
 
     while True:
         time.sleep(.1)

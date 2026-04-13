@@ -2,6 +2,7 @@ import math
 import pygame
 import sys
 import asyncio
+import time
 
 class Position:
 
@@ -87,7 +88,15 @@ class Kara:
         self.rotation = rotation
         self.world = world
     
-    def move(self,steps):
+    def refresh_screen(self, refresh = True, override_update_interval = -1.0):
+        if refresh:
+            if override_update_interval <= 0:
+                time.sleep(appearance.action_duration)
+            elif override_update_interval != 0:
+                time.sleep(override_update_interval)
+            self.world.draw()
+    
+    def move(self,steps, refresh = True, override_update_interval = -1.0):
         
         new_pos = self.position + (self.rotation.get_normal() * steps)
         
@@ -97,8 +106,12 @@ class Kara:
                 return
         
         self.position = new_pos
+
+        self.refresh_screen(refresh, override_update_interval)
     
-    def put_leaf(self,type):
+    
+    
+    def put_leaf(self, type, refresh = True, override_update_interval = -1.0):
         if not self.world.is_space_free(self.position):
             print("Error: Kara kann an " + str(self.position) + " kein ",type,"-Blatt platzieren!")
             return self
@@ -108,7 +121,9 @@ class Kara:
 
         self.world.content.append(leaf)
 
-    def put_carpet(self,type):
+        self.refresh_screen(refresh, override_update_interval)
+
+    def put_carpet(self,type, refresh = True, override_update_interval = -1.0):
         if not self.world.is_space_free(self.position):
             print("Error: Kara kann an " + str(self.position) + " kein ",type,"-Teppich platzieren!")
             return self
@@ -118,12 +133,16 @@ class Kara:
 
         self.world.content.append(carpet)
         
+        self.refresh_screen(refresh, override_update_interval)
+        
     
-    def rotate(self, by_degrees):
+    def rotate(self, by_degrees, refresh = True, override_update_interval = -1.0):
         if by_degrees % 90 != 0:
             print("Error: '", by_degrees, "' ist keine erlaubte Drehung. Kara kann sich nur um 90-Grad Intervalle drehen." )
             return self
         self.rotation += by_degrees
+
+        self.refresh_screen(refresh, override_update_interval)
     
 class World:
     global screen
@@ -144,6 +163,18 @@ class World:
     def prepare(self):
         global screen
 
+        print("""                                                                          
+    ▄▄▄                          ▄▄▄▄   ▄▄▄                   ▄▄▄             
+   ██▀▀█▄       █▄  █▄          █▀ ██  ██                    ▀██▀        █▄   
+   ██ ▄█▀      ▄██▄▄██▄      ▄     ██ ██          ▄           ██      ▀▀ ██   
+   ██▀▀█▄ ▄█▀█▄ ██  ██ ▄█▀█▄ ████▄ █████    ▄▀▀█▄ ████▄▄▀▀█▄  ██      ██ ████▄
+ ▄ ██  ▄█ ██▄█▀ ██  ██ ██▄█▀ ██    ██ ██▄   ▄█▀██ ██   ▄█▀██  ██      ██ ██ ██
+ ▀██████▀▄▀█▄▄▄▄██ ▄██▄▀█▄▄▄▄█▀  ▀██▀  ▀██▄▄▀█▄██▄█▀  ▄▀█▄██ ████████▄██▄████▀
+                                                                              
+                                                                              
+    Welcome to BetterKaraLib!
+    Have fun with our Pythonkara-Bot. """)
+
         screen_width = self.size[0] * appearance.tile_size
         screen_height = self.size[1] * appearance.tile_size
 
@@ -153,6 +184,8 @@ class World:
         self.karaImage = pygame.transform.scale(self.karaImage, [appearance.tile_size, appearance.tile_size])
 
         pygame.display.set_caption("Better Kara")
+
+        self.draw()
 
     def draw(self):
 
@@ -214,6 +247,8 @@ class Appearance:
     tile_size = 64
     line_width = 4
 
+    action_duration = 0.5
+
     image_cache = {
 
     }
@@ -238,7 +273,7 @@ fps = 60
 
 async def check_quit():
     while True:
-    # Handle events
+        # Handle events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -246,6 +281,6 @@ async def check_quit():
 
         world.draw()
 
-        pygame.display.flip()
+        # pygame.display.flip()
 
-        clock.tick(fps)
+        # clock.tick(fps)
