@@ -16,11 +16,11 @@ async def main():
 
     index = 0
 
-    bug.put_carpet("fuer_carpet")
+    bug.put_carpet("white")
     bug.move(1)
-    bug.put_carpet("herr_carpet")
+    bug.put_carpet("red")
     bug.move(1)
-    bug.put_carpet("koehler_carpet")
+    bug.put_carpet("green")
     bug.move(1)
 
     while True:
