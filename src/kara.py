@@ -1,6 +1,7 @@
 import math
 import pygame
 import sys
+import threading
 import asyncio
 import time
 
@@ -273,7 +274,6 @@ fps = 60
 
 async def check_quit():
     while True:
-        # Handle events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
