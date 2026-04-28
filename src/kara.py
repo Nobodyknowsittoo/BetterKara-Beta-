@@ -3,7 +3,6 @@ import pygame
 import sys
 import threading
 import asyncio
-import time
 
 class Position:
 
@@ -66,16 +65,10 @@ class Thing:
         self.position = Position
 
 class Leaf(Thing):
-    leaf_type = "sakura" #basil, apple, grape
+    leaf_type = "sakura" #basil, apple, plum, grape
 
     def __init__(self, leaf_type = "sakura"):
         self.leaf_type = leaf_type
-
-class Carpet(Thing):
-    carpet_color = "black" #white, red, green, blue
-
-    def __init__(self, carpet_color = "black"):
-        self.carpet_color = carpet_color
 
 
 class Kara:
@@ -89,15 +82,7 @@ class Kara:
         self.rotation = rotation
         self.world = world
     
-    def refresh_screen(self, refresh = True, override_update_interval = -1.0):
-        if refresh:
-            if override_update_interval <= 0:
-                time.sleep(appearance.action_duration)
-            elif override_update_interval != 0:
-                time.sleep(override_update_interval)
-            self.world.draw()
-    
-    def move(self,steps, refresh = True, override_update_interval = -1.0):
+    def move(self,steps):
         
         new_pos = self.position + (self.rotation.get_normal() * steps)
         
@@ -107,12 +92,8 @@ class Kara:
                 return
         
         self.position = new_pos
-
-        self.refresh_screen(refresh, override_update_interval)
     
-    
-    
-    def put_leaf(self, type, refresh = True, override_update_interval = -1.0):
+    def put_leaf(self,type):
         if not self.world.is_space_free(self.position):
             print("Error: Kara kann an " + str(self.position) + " kein ",type,"-Blatt platzieren!")
             return self
@@ -121,29 +102,13 @@ class Kara:
         leaf.position = self.position
 
         self.world.content.append(leaf)
-
-        self.refresh_screen(refresh, override_update_interval)
-
-    def put_carpet(self,type, refresh = True, override_update_interval = -1.0):
-        if not self.world.is_space_free(self.position):
-            print("Error: Kara kann an " + str(self.position) + " kein ",type,"-Teppich platzieren!")
-            return self
-        
-        carpet = Carpet(type)
-        carpet.position = self.position
-
-        self.world.content.append(carpet)
-        
-        self.refresh_screen(refresh, override_update_interval)
         
     
-    def rotate(self, by_degrees, refresh = True, override_update_interval = -1.0):
+    def rotate(self, by_degrees):
         if by_degrees % 90 != 0:
             print("Error: '", by_degrees, "' ist keine erlaubte Drehung. Kara kann sich nur um 90-Grad Intervalle drehen." )
             return self
         self.rotation += by_degrees
-
-        self.refresh_screen(refresh, override_update_interval)
     
 class World:
     global screen
@@ -164,18 +129,6 @@ class World:
     def prepare(self):
         global screen
 
-        print("""                                                                          
-    ▄▄▄                          ▄▄▄▄   ▄▄▄                   ▄▄▄             
-   ██▀▀█▄       █▄  █▄          █▀ ██  ██                    ▀██▀        █▄   
-   ██ ▄█▀      ▄██▄▄██▄      ▄     ██ ██          ▄           ██      ▀▀ ██   
-   ██▀▀█▄ ▄█▀█▄ ██  ██ ▄█▀█▄ ████▄ █████    ▄▀▀█▄ ████▄▄▀▀█▄  ██      ██ ████▄
- ▄ ██  ▄█ ██▄█▀ ██  ██ ██▄█▀ ██    ██ ██▄   ▄█▀██ ██   ▄█▀██  ██      ██ ██ ██
- ▀██████▀▄▀█▄▄▄▄██ ▄██▄▀█▄▄▄▄█▀  ▀██▀  ▀██▄▄▀█▄██▄█▀  ▄▀█▄██ ████████▄██▄████▀
-                                                                              
-                                                                              
-    Welcome to BetterKaraLib!
-    Have fun with our Pythonkara-Bot. """)
-
         screen_width = self.size[0] * appearance.tile_size
         screen_height = self.size[1] * appearance.tile_size
 
@@ -186,12 +139,9 @@ class World:
 
         pygame.display.set_caption("Better Kara")
 
-        self.draw()
-
     def draw(self):
 
         self.draw_grid(screen)
-        self.draw_carpets(screen)
         self.draw_leafs(screen)
         self.draw_kara(screen)
 
@@ -200,24 +150,14 @@ class World:
     def draw_leafs(self, surface):
         for thing in self.content:
             if isinstance(thing, Leaf):
-                if not thing.leaf_type in appearance.image_cache.keys():
+                if not thing.leaf_type in appearance.leaf_cache.keys():
                     leafImage = pygame.image.load("assets/leafs/" + thing.leaf_type + ".png").convert_alpha()
                     leafImage = pygame.transform.scale(leafImage, [appearance.tile_size, appearance.tile_size])
-                    appearance.image_cache[thing.leaf_type] = leafImage
-                leafImage = appearance.image_cache[thing.leaf_type]
+                    appearance.leaf_cache[thing.leaf_type] = leafImage
+                leafImage = appearance.leaf_cache[thing.leaf_type]
                 leafPos = (thing.position.x * appearance.tile_size,thing.position.y * appearance.tile_size)
                 surface.blit(leafImage,leafPos)
 
-    def draw_carpets(self, surface):
-        for thing in self.content:
-            if isinstance(thing, Carpet):
-                if not thing.carpet_color in appearance.image_cache.keys():
-                    carpetImage = pygame.image.load("assets/carpets/" + thing.carpet_color + ".png").convert_alpha()
-                    carpetImage = pygame.transform.scale(carpetImage, [appearance.tile_size, appearance.tile_size])
-                    appearance.image_cache[thing.carpet_color] = carpetImage
-                carpetImage = appearance.image_cache[thing.carpet_color]
-                carpetPos = (thing.position.x * appearance.tile_size,thing.position.y * appearance.tile_size)
-                surface.blit(carpetImage,carpetPos)
 
     def draw_grid(self, surface):
 
@@ -248,9 +188,7 @@ class Appearance:
     tile_size = 64
     line_width = 4
 
-    action_duration = 0.5
-
-    image_cache = {
+    leaf_cache = {
 
     }
 
@@ -274,6 +212,7 @@ fps = 60
 
 async def check_quit():
     while True:
+        print("test")
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -281,6 +220,6 @@ async def check_quit():
 
         world.draw()
 
-        # pygame.display.flip()
+        pygame.display.flip()
 
-        # clock.tick(fps)
+        #clock.tick(fps)
