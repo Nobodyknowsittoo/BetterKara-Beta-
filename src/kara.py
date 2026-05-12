@@ -3,6 +3,24 @@ import pygame
 import sys
 import threading
 import asyncio
+import time
+from pynput import keyboard
+
+def on_press(key):
+    global should_quit
+    
+    if key == keyboard.Key.esc:
+        print("Quitted")
+        should_quit = True
+        
+
+def quit_check():
+    print("Ran quit_check()")
+    quit_check_listener = keyboard.Listener(on_press=on_press)
+    quit_check_listener.start()
+
+def test_output():
+    print("Test Print")
 
 class Position:
 
@@ -211,15 +229,20 @@ clock = pygame.time.Clock()
 fps = 60
 
 async def check_quit():
+    print('''
+//     _  _   __   __  ____  __  __ _   ___    ____  __  ____    ____  _  _  __  ____ 
+//    / )( \ / _\ (  )(_  _)(  )(  ( \ / __)  (  __)/  \(  _ \  (  __)( \/ )(  )(_  _)
+//    \ /\ //    \ )(   )(   )( /    /( (_ \   ) _)(  O ))   /   ) _)  )  (  )(   )(  
+//    (_/\_)\_/\_/(__) (__) (__)\_)__) \___/  (__)  \__/(__\_)  (____)(_/\_)(__) (__) 
+''')
     while True:
-        print("test")
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
-        world.draw()
+        #world.draw()
 
-        pygame.display.flip()
+        #pygame.display.flip()
 
         #clock.tick(fps)
