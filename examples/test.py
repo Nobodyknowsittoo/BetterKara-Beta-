@@ -1,10 +1,4 @@
-import time
-import random
-from src.kara import *
-import src.kara as kara
-import threading
-import asyncio
-import sys
+import src.whopper as kara
 
 kara.appearance.tile_size = 64
 kara.appearance.line_width = 1
