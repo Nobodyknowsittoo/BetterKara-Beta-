@@ -6,8 +6,6 @@ import threading
 import asyncio
 import sys
 
-test_output()
-
 kara.appearance.tile_size = 64
 kara.appearance.line_width = 1
 
