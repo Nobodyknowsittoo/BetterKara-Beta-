@@ -229,20 +229,30 @@ clock = pygame.time.Clock()
 fps = 60
 
 async def check_quit():
+    global should_quit
+
+    if should_quit == True:
+        print("Exiting")
+        sys.exit()
     print('''
 //     _  _   __   __  ____  __  __ _   ___    ____  __  ____    ____  _  _  __  ____ 
 //    / )( \ / _\ (  )(_  _)(  )(  ( \ / __)  (  __)/  \(  _ \  (  __)( \/ )(  )(_  _)
 //    \ /\ //    \ )(   )(   )( /    /( (_ \   ) _)(  O ))   /   ) _)  )  (  )(   )(  
 //    (_/\_)\_/\_/(__) (__) (__)\_)__) \___/  (__)  \__/(__\_)  (____)(_/\_)(__) (__) 
 ''')
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
 
         #world.draw()
 
         #pygame.display.flip()
 
         #clock.tick(fps)
+
+def run( file_name: str, function_name):
+
+    main_module = __import__(file_name)
+
+    main_func = getattr(main_module, function_name)
+
+    print(main_func)
+
+    main_func()
