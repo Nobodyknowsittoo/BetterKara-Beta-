@@ -5,6 +5,7 @@ import threading
 import asyncio
 import time
 from pynput import keyboard
+import os
 
 def on_press(key):
     global should_quit
@@ -228,6 +229,12 @@ world = World([10,10], Position(3, 2), Rotation(0))
 clock = pygame.time.Clock()
 fps = 60
 
+RED = '\033[31m'
+GREEN = '\033[32m'
+YELLOW = '\033[33m'
+BLUE = '\033[34m'
+RESET = '\033[0m'
+
 async def check_quit():
     global should_quit
 
@@ -248,6 +255,10 @@ async def check_quit():
         #clock.tick(fps)
 
 def run( file_name: str, function_name):
+
+    cwd = os.getcwd() 
+
+    print("Current Working Directory:\033[31m", cwd, "\033[0m")
 
     main_module = __import__(file_name)
 
