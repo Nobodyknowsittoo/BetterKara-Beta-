@@ -7,6 +7,7 @@ kara.appearance.tile_size = 256
 kara.appearance.line_width = 8
 kara.appearance.action_duration = 0.5
 
+
 async def main():
     world = World([5,3],Position(1,1),Rotation(270)) # Init a world of size (10x10) with Kara at (3,5) rotated by 90°
     kara.world = world

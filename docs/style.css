@@ -1,0 +1,114 @@
+@font-face {
+    font-family: "NationalPark";
+    src: url("../docs/National_Park/NationalPark-VariableFont_wght.ttf");
+}
+
+@font-face {
+    font-family: "DynaPuff";
+    src: url("../docs/DynaPuff/DynaPuff-VariableFont_wdth\,wght.ttf");
+}
+
+body {
+    font-family: "NationalPark", sans-serif;
+    background-color: #04a777;
+    background-image: url("./image/stacked-peaks-haikei.svg");
+    background-size: cover;
+    color: #50514f;
+}   
+
+img {
+    border-radius: 16px;
+}
+
+h1 {
+    margin: 8px;
+    font-family: "DynaPuff", sans-serif;
+}
+
+h2 {
+    margin-bottom: 8px;
+    font-family: "DynaPuff", sans-serif;
+}
+
+a {
+    color: #04a777;
+    text-shadow: .1rem .2rem 1rem#00000042;
+}
+
+.panel{
+    width: 40rem;
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 32px;
+}
+
+.tag {
+    background-color: #04a777;
+    margin-top: 0;
+    margin-bottom: 16px;
+    width: fit-content;
+    color: #fff;
+    padding: .5rem;
+    border-radius: 1rem;
+}
+
+.wrapper{
+    margin-top: 8rem;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.header-image {
+    width: 100%;
+    height: 13rem;
+    border-radius: 1rem;
+    object-fit: cover;
+    box-shadow: 1rem .5rem 1rem #4a57593d;
+    padding: 0rem;
+    transition: .5s;
+}
+
+.header-image:hover {
+    scale: 1.01;
+}
+
+.navbar {
+    background-color: #fdf0d5;
+    border-radius: 1rem;
+    border-style: solid;
+    border-width: .1rem;
+    border-color: #d6ccc2;
+    padding: 1rem;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+.nav-text {
+    color: #000;
+    width: fit-content;
+    display: flexbox;
+    text-decoration: none;
+    padding-left: .5rem;
+    margin-top: .1rem;
+}
+
+.icon {
+    border-radius: 0;
+    display: flexbox;
+    width: fit-content;
+    margin-left: 1rem;
+}
+
+.nav-button {
+    display: flexbox;
+    text-align: center;
+
+    color: #000;
+}
+
+.code-block {
+    border-radius: 1rem;
+    background-color: #00000042 ;
+}
